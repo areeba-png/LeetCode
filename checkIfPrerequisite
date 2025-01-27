@@ -1,0 +1,48 @@
+import java.util.*;
+
+public class Solution {
+    public List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+        boolean[][] isReachable = new boolean[numCourses][numCourses];
+        
+        for (int[] pre : prerequisites) {
+            isReachable[pre[0]][pre[1]] = true;
+        }
+        
+        for (int k = 0; k < numCourses; k++) {
+            for (int i = 0; i < numCourses; i++) {
+                for (int j = 0; j < numCourses; j++) {
+                    if (isReachable[i][k] && isReachable[k][j]) {
+                        isReachable[i][j] = true;
+                    }
+                }
+            }
+        }
+        
+        List<Boolean> result = new ArrayList<>();
+        for (int[] query : queries) {
+            result.add(isReachable[query[0]][query[1]]);
+        }
+        
+        return result;
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        
+        // Test cases
+        int numCourses1 = 2;
+        int[][] prerequisites1 = {{1, 0}};
+        int[][] queries1 = {{0, 1}, {1, 0}};
+        System.out.println(solution.checkIfPrerequisite(numCourses1, prerequisites1, queries1)); // Expected: [false, true]
+
+        int numCourses2 = 2;
+        int[][] prerequisites2 = {};
+        int[][] queries2 = {{1, 0}, {0, 1}};
+        System.out.println(solution.checkIfPrerequisite(numCourses2, prerequisites2, queries2)); // Expected: [false, false]
+
+        int numCourses3 = 3;
+        int[][] prerequisites3 = {{1, 2}, {1, 0}, {2, 0}};
+        int[][] queries3 = {{1, 0}, {1, 2}};
+        System.out.println(solution.checkIfPrerequisite(numCourses3, prerequisites3, queries3)); // Expected: [true, true]
+    }
+}
